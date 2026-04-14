@@ -103,17 +103,76 @@ if (window.gsap && !reduceMotion) {
     .from(".hero-cta .btn", { y: 30, opacity: 0, duration: 0.6, stagger: 0.1, ease: "power3.out" }, "-=0.4")
     .from(".hero-bee", { opacity: 0, scale: 0, duration: 0.6, stagger: 0.15, ease: "back.out(2)" }, "-=0.6");
 
-  // Bees floating eternally
-  gsap.utils.toArray(".hero-bee").forEach((bee, i) => {
-    const tl = gsap.timeline({ repeat: -1, yoyo: true });
-    tl.to(bee, {
-      x: () => (Math.random() - 0.5) * 60,
-      y: () => (Math.random() - 0.5) * 40,
-      rotation: () => (Math.random() - 0.5) * 20,
-      duration: 2 + Math.random() * 2,
-      ease: "sine.inOut"
+  // Enjambre dinamico: spawnea muchas abejitas con movimiento amplio
+  const BEE_SVG = `
+    <svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+      <g class="bee-wings">
+        <ellipse cx="20" cy="14" rx="10" ry="7" fill="#fff" opacity="0.55"/>
+        <ellipse cx="40" cy="14" rx="10" ry="7" fill="#fff" opacity="0.55"/>
+      </g>
+      <ellipse cx="30" cy="22" rx="18" ry="11" fill="#ffc107"/>
+      <rect x="20" y="14" width="3" height="16" fill="#000"/>
+      <rect x="28" y="14" width="3" height="16" fill="#000"/>
+      <rect x="36" y="14" width="3" height="16" fill="#000"/>
+      <circle cx="14" cy="22" r="2" fill="#000"/>
+    </svg>`;
+
+  function spawnSwarm(container, count, opts = {}) {
+    if (!container) return;
+    const rangeX = opts.rangeX || 320;
+    const rangeY = opts.rangeY || 220;
+    for (let i = 0; i < count; i++) {
+      const bee = document.createElement("div");
+      bee.className = "bee-dyn";
+      bee.innerHTML = BEE_SVG;
+      const scale = 0.35 + Math.random() * 0.95;
+      const opacity = 0.55 + Math.random() * 0.45;
+      bee.style.setProperty("--bee-scale", scale);
+      bee.style.setProperty("--bee-op", opacity);
+      bee.style.left = (Math.random() * 96 + 2) + "%";
+      bee.style.top = (Math.random() * 88 + 6) + "%";
+      container.appendChild(bee);
+
+      // Wander principal (posicion)
+      gsap.to(bee, {
+        x: () => (Math.random() - 0.5) * rangeX,
+        y: () => (Math.random() - 0.5) * rangeY,
+        rotation: () => (Math.random() - 0.5) * 60,
+        duration: 2.2 + Math.random() * 3.5,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true,
+        delay: Math.random() * 2
+      });
+
+      // Pulsacion sutil de escala (respiracion)
+      gsap.to(bee, {
+        scale: 0.9 + Math.random() * 0.25,
+        duration: 0.8 + Math.random() * 1.2,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true,
+        delay: Math.random()
+      });
+    }
+  }
+
+  // Heredadas (las 3 hardcodeadas en HTML) — les meto mas movimiento
+  gsap.utils.toArray(".hero-bee").forEach(bee => {
+    gsap.to(bee, {
+      x: () => (Math.random() - 0.5) * 260,
+      y: () => (Math.random() - 0.5) * 160,
+      rotation: () => (Math.random() - 0.5) * 50,
+      duration: 2 + Math.random() * 3,
+      ease: "sine.inOut",
+      repeat: -1,
+      yoyo: true
     });
   });
+
+  // Nuevas abejitas: hero 28, cta 14
+  spawnSwarm(document.querySelector(".hero"), 28, { rangeX: 380, rangeY: 260 });
+  spawnSwarm(document.querySelector(".cta-section"), 14, { rangeX: 300, rangeY: 180 });
 
   // Reveal genérico
   gsap.utils.toArray("[data-reveal]").forEach(el => {
@@ -175,13 +234,13 @@ if (window.gsap && !reduceMotion) {
     }
   });
 
-  // CTA bees floating
+  // CTA bees floating (mas agresivo)
   gsap.utils.toArray(".cta-bee").forEach(bee => {
     gsap.to(bee, {
-      x: () => (Math.random() - 0.5) * 80,
-      y: () => (Math.random() - 0.5) * 60,
-      rotation: () => (Math.random() - 0.5) * 30,
-      duration: 3,
+      x: () => (Math.random() - 0.5) * 320,
+      y: () => (Math.random() - 0.5) * 200,
+      rotation: () => (Math.random() - 0.5) * 70,
+      duration: 2.5 + Math.random() * 2,
       ease: "sine.inOut",
       repeat: -1,
       yoyo: true
