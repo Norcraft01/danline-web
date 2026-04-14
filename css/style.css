@@ -368,6 +368,7 @@ body::after {
   padding: 18px 36px;
   position: relative;
   overflow: hidden;
+  isolation: isolate;
   transition: color 0.4s ease;
   border: 1px solid var(--border-strong);
   display: inline-flex;
