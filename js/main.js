@@ -2,6 +2,32 @@
    DANLINE.ONLINE — Motor de animaciones (GSAP)
    ========================================================= */
 
+// =========================================================
+// FAB WHATSAPP — usa el href del CTA final existente
+// =========================================================
+(function () {
+  function spawnWaFab() {
+    if (document.querySelector(".wa-fab")) return;
+    const ref = document.querySelector('a[href*="wa.me"]');
+    if (!ref) return;
+    const a = document.createElement("a");
+    a.className = "wa-fab";
+    a.href = ref.href;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.setAttribute("aria-label", "Contactar por WhatsApp");
+    a.innerHTML = `
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path fill="#fff" d="M16 3C8.82 3 3 8.82 3 16c0 2.29.6 4.44 1.66 6.3L3 29l6.9-1.63A12.9 12.9 0 0 0 16 29c7.18 0 13-5.82 13-13S23.18 3 16 3zm0 23.6a10.6 10.6 0 0 1-5.4-1.47l-.38-.22-4.1.97.97-4-.25-.4A10.6 10.6 0 1 1 16 26.6zm5.8-7.93c-.32-.16-1.87-.92-2.16-1.02-.29-.1-.5-.16-.71.16-.21.32-.82 1.02-1.01 1.23-.18.21-.37.24-.69.08-.32-.16-1.34-.49-2.56-1.57-.95-.84-1.59-1.88-1.78-2.2-.18-.32-.02-.49.14-.65.14-.14.32-.37.48-.55.16-.18.21-.32.32-.53.11-.21.05-.39-.03-.55-.08-.16-.71-1.7-.97-2.33-.26-.62-.52-.53-.71-.54l-.6-.01c-.21 0-.55.08-.84.39-.29.32-1.11 1.08-1.11 2.63 0 1.55 1.13 3.05 1.29 3.26.16.21 2.23 3.4 5.4 4.64.75.32 1.34.52 1.8.66.76.24 1.44.21 1.98.13.6-.09 1.87-.76 2.14-1.49.27-.73.27-1.36.19-1.49-.08-.13-.29-.21-.61-.37z"/>
+      </svg>
+      <span>WhatsApp</span>`;
+    document.body.appendChild(a);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", spawnWaFab);
+  else spawnWaFab();
+})();
+
+
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // =========================================================

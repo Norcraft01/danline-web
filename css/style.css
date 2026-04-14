@@ -1053,5 +1053,47 @@ footer {
   .stats-grid { grid-template-columns: 1fr; gap: 30px; }
   .footer-grid { grid-template-columns: 1fr; }
   .footer-bottom { flex-direction: column; gap: 10px; text-align: center; }
-  .wa-float { bottom: 16px; right: 16px; width: 52px; height: 52px; }
+}
+
+/* =========================================================
+   FAB WHATSAPP — flotante
+   ========================================================= */
+.wa-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 9999;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px 12px 14px;
+  background: #25d366;
+  color: #fff;
+  border-radius: 999px;
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  animation: waPulse 2.4s ease-in-out infinite;
+}
+.wa-fab svg { width: 28px; height: 28px; flex-shrink: 0; }
+.wa-fab:hover {
+  transform: translateY(-3px) scale(1.04);
+  background: #1fbc5a;
+  box-shadow: 0 12px 32px rgba(37, 211, 102, 0.6);
+  animation: none;
+}
+@keyframes waPulse {
+  0%, 100% { box-shadow: 0 8px 24px rgba(37, 211, 102, 0.45), 0 0 0 0 rgba(37, 211, 102, 0.5); }
+  50%      { box-shadow: 0 8px 24px rgba(37, 211, 102, 0.6),  0 0 0 14px rgba(37, 211, 102, 0); }
+}
+@media (max-width: 600px) {
+  .wa-fab { right: 14px; bottom: 14px; padding: 12px 16px 12px 12px; font-size: 0.9rem; }
+  .wa-fab svg { width: 24px; height: 24px; }
+}
+@media (max-width: 380px) {
+  .wa-fab span { display: none; }
+  .wa-fab { padding: 12px; border-radius: 50%; }
 }
