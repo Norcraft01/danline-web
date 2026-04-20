@@ -361,6 +361,84 @@ document.querySelectorAll("[data-reload]").forEach(el => {
 });
 
 // =========================================================
+// ACORDEÓN TIER / MANTENIMIENTO
+// - tier-toggle: solo UN panel abierto a la vez (accordion strict)
+// - maintenance-toggle: independiente (puede convivir con otro)
+// =========================================================
+(function initAccordions() {
+  const togglers = document.querySelectorAll(".tier-toggle, .maintenance-toggle");
+
+  // Estado inicial: cerrar todos los panels
+  togglers.forEach(btn => {
+    const panel = document.getElementById(btn.getAttribute("aria-controls"));
+    if (!panel) return;
+    panel.style.height = "0px";
+    panel.style.opacity = "0";
+    panel.style.overflow = "hidden";
+    panel.style.willChange = "height";
+    panel.classList.remove("td-open");
+  });
+
+  function closePanel(btn, panel) {
+    btn.setAttribute("aria-expanded", "false");
+    if (window.gsap && !reduceMotion) {
+      gsap.to(panel, {
+        height: 0, opacity: 0, duration: 0.4, ease: "power2.inOut",
+        onComplete: () => { panel.classList.remove("td-open"); }
+      });
+    } else {
+      panel.style.height = "0px"; panel.style.opacity = "0";
+      panel.classList.remove("td-open");
+    }
+  }
+
+  function openPanel(btn, panel) {
+    btn.setAttribute("aria-expanded", "true");
+    panel.classList.add("td-open");
+    const innerHeight = panel.firstElementChild
+      ? panel.firstElementChild.offsetHeight
+      : panel.scrollHeight;
+
+    if (window.gsap && !reduceMotion) {
+      gsap.fromTo(panel,
+        { height: 0, opacity: 0 },
+        {
+          height: innerHeight, opacity: 1, duration: 0.55, ease: "power3.out",
+          onComplete: () => {
+            panel.style.height = "auto";
+            if (window.ScrollTrigger) ScrollTrigger.refresh();
+          }
+        });
+    } else {
+      panel.style.height = "auto"; panel.style.opacity = "1";
+    }
+  }
+
+  togglers.forEach(btn => {
+    const panel = document.getElementById(btn.getAttribute("aria-controls"));
+    if (!panel) return;
+    const isTierToggle = btn.classList.contains("tier-toggle");
+
+    btn.addEventListener("click", e => {
+      e.preventDefault();
+      const isOpen = btn.getAttribute("aria-expanded") === "true";
+
+      // Si es tier y se va a abrir, cerrar los otros tier primero
+      if (isTierToggle && !isOpen) {
+        document.querySelectorAll(".tier-toggle[aria-expanded='true']").forEach(other => {
+          if (other === btn) return;
+          const otherPanel = document.getElementById(other.getAttribute("aria-controls"));
+          if (otherPanel) closePanel(other, otherPanel);
+        });
+      }
+
+      if (isOpen) closePanel(btn, panel);
+      else openPanel(btn, panel);
+    });
+  });
+})();
+
+// =========================================================
 // LOGO HEX SUBTLE GLITCH
 // =========================================================
 const brand = document.querySelector(".nav .brand");
